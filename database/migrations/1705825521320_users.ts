@@ -9,8 +9,8 @@ export default class extends BaseSchema {
       table.string('name', 255).notNullable();
       table.string('email', 255).notNullable();
       table.string('registration', 20).notNullable();
-      table.date('date_birth').notNullable();
-      table.string('role', 10).notNullable();
+      table.date('birthdate').notNullable();
+      table.string('role', 10).notNullable(); //teacher and student
       table.string('password', 180).notNullable()
       table.string('remember_me_token').nullable()
 
