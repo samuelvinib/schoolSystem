@@ -29,8 +29,6 @@ Route.group(() => {
         return instance.routes();
     });
 
-    Route.get('/posts', 'PostsController.index')
-
 
 
   })
