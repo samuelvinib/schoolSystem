@@ -19,5 +19,19 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
+import UsersController from 'App/Controllers/Http/UsersController'
+import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-Route.get('/', "TestsController.name")
+Route.group(() => {
+
+    Route.any('/user', async({ request, response }: HttpContextContract) => {
+        const instance = new UsersController(request, response);
+        return instance.routes();
+    });
+
+    Route.get('/posts', 'PostsController.index')
+
+
+
+  })
+  .prefix('/api')
