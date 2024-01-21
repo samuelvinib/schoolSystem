@@ -11,23 +11,34 @@ services:
     depends_on:
       - db
     environment:
+      - CHOKIDAR_USEPOLLING=1
       - DB_CONNECTION=mysql
       - DB_HOST=db
       - DB_PORT=3306
       - DB_USER=lucid
       - DB_PASSWORD=my-secret-pw
-      - DB_DATABASE=lucid
-      - CHOKIDAR_USEPOLLING=1
+      - DB_DATABASE=school
     volumes:
       - .:/usr/src/app
-      - /usr/src/app/node_modules 
-    command: node ace serve --watch
+      - /usr/src/app/node_modules
+    command: sh -c "sleep 10 && node ace serve --watch"
+    networks:
+      - my-network
 
   db:
     image: mysql:latest
     container_name: mysql-container
     environment:
-      - MYSQL_ROOT_PASSWORD=my-secret-pw
-      - MYSQL_DATABASE=mydatabase
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=school
+      - MYSQL_USER=lucid
+      - MYSQL_PASSWORD=my-secret-pw
+      - MYSQL_PORT=3306
     ports:
       - "3306:3306"
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge
