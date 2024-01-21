@@ -19,10 +19,19 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
-import UsersController from 'App/Controllers/Http/UsersController'
+import HealthCheck from '@ioc:Adonis/Core/HealthCheck'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import UsersController from 'App/Controllers/Http/UsersController'
 
 Route.group(() => {
+
+    Route.get('health', async ({ response }) => {
+        const report = await HealthCheck.getReport()
+      
+        return report.healthy
+          ? response.ok(report)
+          : response.badRequest(report)
+      })
 
     Route.any('/user', async({ request, response }: HttpContextContract) => {
         const instance = new UsersController(request, response);

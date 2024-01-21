@@ -2,7 +2,6 @@
 FROM node:14-alpine as builder
 WORKDIR /usr/src/app
 COPY . .
-COPY .env.example .env
 RUN npm install
 
 # Etapa 2: Criar imagem final
