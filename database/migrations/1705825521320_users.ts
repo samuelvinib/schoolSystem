@@ -12,7 +12,6 @@ export default class extends BaseSchema {
       table.date('birthdate').notNullable();
       table.string('role', 10).notNullable(); //teacher and student
       table.string('password', 180).notNullable()
-      table.string('remember_me_token').nullable()
 
       /**
        * Uses timestampz for PostgreSQL and DATETIME2 for MSSQL
