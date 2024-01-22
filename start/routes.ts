@@ -20,9 +20,6 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 import HealthCheck from '@ioc:Adonis/Core/HealthCheck'
-import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-
-import UsersController from 'App/Controllers/Http/UsersController'
 
 Route.group(() => {
 
@@ -38,10 +35,9 @@ Route.group(() => {
 
     Route.any('/login', 'AuthController.login');
 
-    Route.any('/user', async ({ request, response}: HttpContextContract) => {
-        const instance = new UsersController(request, response);
-        return instance.routes();
-    }).middleware('auth');
+    Route.get('/user', 'UsersController.show' ).middleware('auth');
+    Route.put('/user', 'UsersController.update' ).middleware('auth');
+    Route.delete('/user', 'UsersController.destroy' ).middleware('auth');
 
 
 

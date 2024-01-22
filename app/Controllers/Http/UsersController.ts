@@ -1,51 +1,63 @@
+import Database from '@ioc:Adonis/Lucid/Database';
+import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import User from 'App/Models/User';
+
 export default class UsersController {
 
-    private request;
-    private response;
 
-    constructor(request, response){
-        this.request = request;
-        this.response = response;
+    protected show({ response, auth}: HttpContextContract){
+        const userData = auth.user;
+        return response.ok(userData);
     }
 
-    public async routes(){
+    protected async update({ request, response, auth}: HttpContextContract){
 
-        const method:String = this.request.method();
+        const bodyRequest = request.all();
+        const userData = auth.user;
 
-        switch(method){
-            case "GET":{
-                return this.show();
-            }
-            case "POST":{
-                return this.store();
-            }
-            case "PUT":{
-                return this.update();
-            }
-            case "DELETE":{
-                return this.destroy();
-            }
-            default: {
-                this.response.status(405).json({
-                    message: 'Method not allowed',
-                });
-            }
+        if (!userData) {
+            return response.badRequest("Conta inválida.");
+        }    
+
+        try{
+            await Database
+                .from('users')
+                .where('email',userData.email)
+                .update(bodyRequest, ['id'])
+                .first()
+            
+            return response.ok({message:"Dados alterados com sucesso!"})
+        }catch(e){
+            return response.badGateway(e)
         }
     }
 
-    private show(){
-        return this.response.status(200).json({message:"get"});
-    }
-    
-    private store(){
-        return this.response.status(201).json({message:"post"});
-    }
+    protected async destroy({auth, response}: HttpContextContract){
 
-    private update(){
-        return this.response.status(200).json({message:"put"});
-    }
+        const userData = auth.user;
 
-    private destroy(){
-        return this.response.status(204).json({message:"delete"});
+        if (!userData) {
+            return response.badRequest("Conta inválida.");
+        }   
+
+        try {
+            // Encontre o usuário pelo ID
+            const user = await User.find(userData.id)
+      
+            // Verifique se o usuário existe
+            if (!user) {
+              return response.notFound({ error: 'Usuário não encontrado' })
+            }
+      
+            // Deleta o usuário
+            await user.delete()
+      
+            // Responde com uma mensagem de sucesso
+            return response.ok({ message: 'Usuário excluído com sucesso' })
+          } catch (error) {
+            // Se ocorrer um erro durante a exclusão, responda com um erro 500
+            console.error(error)
+            return response.internalServerError({ error: 'Ocorreu um erro ao excluir o usuário' })
+          }
     }
 }
