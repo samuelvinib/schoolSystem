@@ -41,7 +41,7 @@ Route.group(() => {
     Route.any('/user', async ({ request, response}: HttpContextContract) => {
         const instance = new UsersController(request, response);
         return instance.routes();
-    });
+    }).middleware('auth');
 
 
 

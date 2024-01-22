@@ -1,28 +1,21 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Database from '@ioc:Adonis/Lucid/Database'
-import Hash from '@ioc:Adonis/Core/Hash'
 import User from 'App/Models/User';
 
 export default class AuthController {
 
     protected async register({ request, response }: HttpContextContract) {
+        
         let data: object = request.all();
-        const hash_password = Hash.make(data['password']);
-        data['password'] = await hash_password;
-        data['created_at'] = new Date();
-        data['updated_at'] = new Date();
 
         try {
-            const insertedUser = await Database
-                .table('users')
-                .returning('id')
-                .insert(data)
-            
+            const user = await User.create(data);
+
+            console.log('Usuário criado com sucesso:', user);
             return response.status(201).json({
                 success: true,
                 data: {
                     user: {
-                        id: insertedUser[0],
+                        id: user.id,
                         username: data['name'],
                         email: data['email'],
                         role: data['role']
@@ -41,33 +34,18 @@ export default class AuthController {
 
         const email = request.input('email')
         const password = request.input('password')
+        let token:Object ={};
 
         try {
-            let user = await User
-                .query()
-                .where('email', email)
-                .select({
-                    id: 'id',
-                    userEmail: 'email',
-                    Userpassword: 'password'
-                })
-                .firstOrFail()
-
-
-            // Verify password
-            if (!(await Hash.verify('$scrypt$n=16384,r=8,p=1$tAW1k6vz7YGvcYeoO22RQQ$zSrz+tE128ix39bm6DTFm93sR/9JphZ0Ghl/URawjCKXVdVyBK1NTPqO8zxqII9+RPo1vhs6+ICNvM/PmQxAxw', password))) {
-                return response.unauthorized('Invalid credentials')
-            }
-
-
-            const token = await auth.use('api').generate(user)
+            token = await auth.use('api').attempt(email, password, {
+                expiresIn: '30 mins'
+              });
             return token;
-
-        } catch (e) {
-            return response.status(500).json({
-                error: e['sqlMessage']
+          } catch (error) {
+            return response.unauthorized({
+                "message":"Usuário ou senha incorretos."
             })
-        }
+          }
     }
 
 }
