@@ -39,7 +39,7 @@ Route.group(() => {
     Route.put('/user', 'UsersController.update' ).middleware('auth');
     Route.delete('/user', 'UsersController.destroy' ).middleware('auth');
 
-
+    Route.get('/classroom', 'ClassroomsController.get' ).middleware(['auth', 'isTeacher']);
 
 })
     .prefix('/api')
