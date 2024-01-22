@@ -17,7 +17,7 @@ export default class AuthController {
                 .table('users')
                 .returning('id')
                 .insert(data)
-
+            
             return response.status(201).json({
                 success: true,
                 data: {
