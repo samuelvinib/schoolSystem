@@ -6,7 +6,9 @@ export default class CheckTeacherRole {
 
     // Verifica se o usuário tem a role "teacher"
     if (user.role !== 'teacher') {
-      return response.forbidden('Acesso negado. Somente professores têm permissão para acessar esta rota.')
+      return response.forbidden({
+        message:'Acesso negado. Somente professores têm permissão para acessar esta rota.'
+      })
     }
 
     // Passa para o próximo middleware
