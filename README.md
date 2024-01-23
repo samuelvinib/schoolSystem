@@ -1,13 +1,10 @@
 # Teste SchoolSystem
 
-
-# Descrição
-
 >
 >
-> ## Projeto Backend - Sistem de produtos para um mercado em PHP
+> # Projeto Backend - Sistem de produtos para um mercado em PHP
 >
->Descrição: Com o encerramento da pandemia, as escolas e universidades necessitarão de um controle eficiente na alocação de salas para professores e alunos. Para atender a essa demanda, desenvolvi uma API em Node.js utilizando o framework AdonisJS (https://adonisjs.com).
+> ### Descrição: Com o encerramento da pandemia, as escolas e universidades necessitarão de um controle eficiente na alocação de salas para professores e alunos. Para atender a essa demanda, desenvolvi uma API em Node.js utilizando o framework AdonisJS (https://adonisjs.com).
 >
 >
 > ## Tecnologias utilizadas no projeto:
@@ -39,7 +36,7 @@
 <br>
 
 
- ## Passo 4
+ ## Pronto!
    Seu projeto estará rodando no seguinte endereço:
 ```bash
   http://localhost:3333/
