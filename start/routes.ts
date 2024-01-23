@@ -2,11 +2,6 @@ import Route from '@ioc:Adonis/Core/Route'
 import HealthCheck from '@ioc:Adonis/Core/HealthCheck'
 
 Route.group(() => {
-    // Rota para a documentação Swagger
-    Route.get('/docs', async ({ view }) => {
-        const specUrl = 'your spec url'; // Substitua pelo URL real da sua especificação Swagger
-        return view.render('swagger', { specUrl });
-    });
 
     // Rota de saúde
     Route.get('health', async ({ response }) => {
