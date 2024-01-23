@@ -2,7 +2,7 @@
 
 >
 >
-> # Projeto Backend - Sistem de produtos para um mercado em PHP
+> # Projeto Backend - Sistema de Gestão Escolar
 >
 > ### Descrição: Com o encerramento da pandemia, as escolas e universidades necessitarão de um controle eficiente na alocação de salas para professores e alunos. Para atender a essa demanda, desenvolvi uma API em Node.js utilizando o framework AdonisJS (https://adonisjs.com).
 >
