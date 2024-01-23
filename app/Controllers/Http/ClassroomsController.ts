@@ -173,7 +173,7 @@ export default class ClassroomsController {
         });
       }
 
-      const classroom = await this.checkClassroomAvailabilityAndCapacity(classroomId);
+      await this.checkClassroomAvailabilityAndCapacity(classroomId);
 
       // Criar o registro na tabela user_classrooms
       const query = await UserClassroom.create({
@@ -181,7 +181,10 @@ export default class ClassroomsController {
         classroom_id: classroomId,
       });
 
-      return query;
+      return response.ok({
+        message:"Aluno cadastrado com sucesso!",
+        query
+      });
     } catch (e) {
         if(e.message === 'E_ROW_NOT_FOUND: Row not found'){
             return response.badGateway({error:'Aluno ou sala inválida.'})
@@ -215,7 +218,7 @@ export default class ClassroomsController {
       await existingUserClassroom.delete();
 
       return response.ok({
-        message: "Estudante removido da sala com sucesso.",
+        message: "Estudante removido da sala com sucesso."
       });
     } catch (e) {
       return this.handleErrors(response, e);
