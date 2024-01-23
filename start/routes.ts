@@ -35,6 +35,7 @@ Route.group(() => {
     Route.any('/login', 'AuthController.login');
 
     Route.group(()=>{
+        Route.get('/classroom', 'UsersController.showAllClassrooms' );
         Route.get('/user', 'UsersController.show' );
         Route.put('/user', 'UsersController.update' );
         Route.delete('/user', 'UsersController.destroy' );
@@ -47,8 +48,8 @@ Route.group(() => {
         Route.delete('/classroom/:classroomId', 'ClassroomsController.destroy' );
         Route.group(()=>{
             Route.get('/students', 'UsersController.showAllUsers' );
-            Route.post('/students/:classroomId', 'ClassroomsController.addStudent' );
-            Route.delete('/students/:classroomId', 'ClassroomsController.removeStudent' );
+            Route.post('/:classroomId/students/:studentsId', 'ClassroomsController.addStudent' );
+            Route.delete('/:classroomId/students/:studentsId', 'ClassroomsController.removeStudent' );
         }).prefix('/classroom')
     }).prefix('/professor').middleware(['auth', 'isProfessor'])
 

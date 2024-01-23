@@ -16,6 +16,7 @@ export default class ClassroomsController {
             const query = await Database
                 .query()
                 .from('classrooms as c')
+                .where('professor_id', userData.id)
                 .leftJoin('user_classrooms as uc', 'uc.classroom_id', '=', 'c.id')
                 .leftJoin('users as u', 'u.id', '=', 'uc.user_id')
                 .leftJoin('users as professor', 'professor.id', '=', 'c.professor_id') // Adicionando o join para o professor
@@ -137,10 +138,9 @@ export default class ClassroomsController {
         }
     }
 
-    protected async addStudent({ auth, response, params, request }: HttpContextContract) {
-        const bodyRequest = request.all();
+    protected async addStudent({ auth, response, params }: HttpContextContract) {
         const userData = auth.user;
-        const { classroomId } = params;
+        const { classroomId, studentsId } = params;
 
         if (!userData) {
             return response.badRequest("Conta inválida.");
@@ -150,7 +150,7 @@ export default class ClassroomsController {
             // Verificar se o estudante já está associado à sala de aula
             const existingUserClassroom = await UserClassroom
                 .query()
-                .where('user_id', bodyRequest.user_id)
+                .where('user_id', studentsId)
                 .where('classroom_id', classroomId)
                 .first();
 
@@ -185,7 +185,7 @@ export default class ClassroomsController {
             // Criar o registro na tabela user_classrooms
 
             const query = await UserClassroom.create({
-                user_id: bodyRequest.user_id,
+                user_id: studentsId,
                 classroom_id: classroomId
             });
 
@@ -197,6 +197,46 @@ export default class ClassroomsController {
                     error: 'Por favor, insira um aluno válido.'
                 });
             }
+            return response.badGateway({ error: e.message });
+        }
+    }
+
+    protected async removeStudent({ auth, response, params }: HttpContextContract) {
+        const userData = auth.user;
+        const { classroomId, studentsId } = params;
+
+        if (!userData) {
+            return response.badRequest("Conta inválida.");
+        }
+
+        if(classroomId == undefined || studentsId == undefined){
+            return response.badGateway({ error: "Insira parâmetros válidos" });
+        }
+
+        try {
+            // Verificar se o estudante está associado à sala de aula
+            const existingUserClassroom = await UserClassroom
+                .query()
+                .where('user_id', studentsId)
+                .where('classroom_id', classroomId)
+                .first();
+
+            if (!existingUserClassroom) {
+                return response.badRequest({
+                    error: "Este estudante não está associado a esta sala de aula."
+                });
+            }
+            
+
+            // Remover o registro da tabela user_classrooms
+            await existingUserClassroom.delete();
+
+            return response.ok({
+                message: "Estudante removido da sala com sucesso."
+            });
+
+        } catch (e) {
+            console.log(e)
             return response.badGateway({ error: e.message });
         }
     }
