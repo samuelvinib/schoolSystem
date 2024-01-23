@@ -50,7 +50,7 @@ Route.group(() => {
             Route.post('/:classroomId/addstudent', 'ClassroomsController.destroy' );
             Route.delete('/:classroomsId/addstudent', 'ClassroomsController.destroy' );
         }).prefix('/classrooms')
-    }).prefix('/professors').middleware(['auth', 'isTeacher'])
+    }).prefix('/professor').middleware(['auth', 'isProfessor'])
 
 })
     .prefix('/api')

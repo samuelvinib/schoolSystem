@@ -41,4 +41,4 @@ Server.middleware.register([
 |
 */
 Server.middleware.registerNamed({auth: () => import('App/Middleware/Auth'),
-isTeacher: () => import('App/Middleware/CheckTeacherRole')})
+isProfessor: () => import('App/Middleware/CheckProfessorRole')})

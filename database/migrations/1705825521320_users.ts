@@ -10,7 +10,7 @@ export default class extends BaseSchema {
       table.string('email', 255).notNullable().unique();
       table.string('registration', 20).notNullable().unique();
       table.date('birthdate').notNullable();
-      table.string('role', 10).notNullable(); //teacher and student
+      table.string('role', 10).notNullable(); //professor and student
       table.string('password', 180).notNullable()
 
       /**

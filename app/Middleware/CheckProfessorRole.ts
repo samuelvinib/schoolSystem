@@ -1,11 +1,11 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export default class CheckTeacherRole {
+export default class CheckProfessorRole {
   public async handle({ auth, response}: HttpContextContract, next: () => Promise<void>) {
     const user = await auth.authenticate()
 
-    // Verifica se o usuário tem a role "teacher"
-    if (user.role !== 'teacher') {
+    // Verifica se o usuário tem a role "professor"
+    if (user.role !== 'professor') {
       return response.forbidden({
         message:'Acesso negado. Somente professores têm permissão para acessar esta rota.'
       })

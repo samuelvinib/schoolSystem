@@ -6,7 +6,7 @@ export default class Classroom extends BaseModel {
   public id: number
 
   @column()
-  public teacher_id: number
+  public professor_id: number
 
   @column()
   public class_number: number

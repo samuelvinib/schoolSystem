@@ -14,14 +14,14 @@ export default class ClassroomsController {
         try {
             const query = await Classroom
                 .query()
-                .where('teacher_id', userData.id)
+                .where('professor_id', userData.id)
                 .with('user_classrooms', (builder) => {
                     builder.from('users').select('id', 'email')
                 }, ['id', 'email'])
                 .select('*');
 
 
-            // const query = await Classroom.query().where('teacher_id', userData.id);
+            // const query = await Classroom.query().where('professor_id', userData.id);
             console.log(query);
             return query;
         } catch (e) {
@@ -56,7 +56,7 @@ export default class ClassroomsController {
 
         try {
             const query = await Classroom.create({
-                teacher_id: userData.id,
+                professor_id: userData.id,
                 class_number: bodyRequest.class_number,
                 student_capacity: bodyRequest.student_capacity,
             });
