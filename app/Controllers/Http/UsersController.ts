@@ -1,29 +1,40 @@
 import Database from '@ioc:Adonis/Lucid/Database';
-import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import User from 'App/Models/User';
+
+interface ClassroomData {
+    classroom_id: number;
+    classroom_number: string;
+    availability: string;
+    professor_name: string;
+}
 
 export default class UsersController {
 
-    protected async showAllUsers({ response, auth }: HttpContextContract) {
+    private getUserData(auth: HttpContextContract['auth']) {
         const userData = auth.user;
 
         if (!userData) {
-            return response.badRequest("Conta inválida.");
+            throw new Error("Conta inválida.");
         }
 
-        const query = await User.query()
-            .where('role', 'student')
-        return response.ok(query);
+        return userData;
+    }
+
+    protected async showAllUsers({ response }: HttpContextContract) {
+        try {
+
+            const query = await User.query().where('role', 'student');
+            return response.ok(query);
+        } catch (error) {
+            return response.badRequest(error.message);
+        }
     }
 
     protected async showAllClassrooms({ response, auth }: HttpContextContract) {
-        const userData = auth.user;
-
-        if (!userData) {
-            return response.badRequest("Conta inválida.");
-        }
-
         try {
+            const userData = this.getUserData(auth);
+
             const query = await Database
                 .query()
                 .from('user_classrooms as uc')
@@ -37,81 +48,63 @@ export default class UsersController {
                 )
                 .where('uc.user_id', userData.id);
 
-            const classrooms = query.reduce((result, row) => {
-                result.push({
-                    classroom_id: row.classroom_id,
-                    classroom_number: row.classroom_number,
-                    availability: row.availability,
-                    professor_name: row.professor_name,
-                });
-                return result;
-            }, []);
-            return response.ok(classrooms);
-        } catch (e) {
-            return e;
-        }
+            const classrooms: ClassroomData[] = query.map(row => ({
+                classroom_id: row.classroom_id,
+                classroom_number: row.classroom_number,
+                availability: row.availability,
+                professor_name: row.professor_name,
+            }));
 
+            return response.ok(classrooms);
+        } catch (error) {
+            return response.badGateway(error.message);
+        }
     }
 
     protected async show({ response, auth }: HttpContextContract) {
-        const userData = auth.user;
+        try {
+            const userData = this.getUserData(auth);
 
-        if (!userData) {
-            return response.badRequest("Conta inválida.");
+            const query = await User.findBy('id', userData.id);
+            return response.ok(query);
+        } catch (error) {
+            return response.badGateway(error.message);
         }
-
-        const query = await User.findBy('id', userData.id)
-        return response.ok(query);
     }
 
     protected async update({ request, response, auth }: HttpContextContract) {
-
-        const bodyRequest = request.all();
-        const userData = auth.user;
-
-        if (!userData) {
-            return response.badRequest("Conta inválida.");
-        }
-
         try {
+            const bodyRequest = request.all();
+            const userData = this.getUserData(auth);
+
             await Database
                 .from('users')
                 .where('email', userData.email)
                 .update(bodyRequest, ['id'])
-                .first()
+                .first();
 
-            return response.ok({ message: "Dados alterados com sucesso!" })
-        } catch (e) {
-            return response.badGateway(e)
+            return response.ok({ message: "Dados alterados com sucesso!" });
+        } catch (error) {
+            return response.badGateway(error.message);
         }
     }
 
     protected async destroy({ auth, response }: HttpContextContract) {
-
-        const userData = auth.user;
-
-        if (!userData) {
-            return response.badRequest("Conta inválida.");
-        }
-
         try {
-            // Encontre o usuário pelo ID
-            const user = await User.find(userData.id)
+            const userData = this.getUserData(auth);
 
-            // Verifique se o usuário existe
+            const user = await User.find(userData.id);
+
             if (!user) {
-                return response.notFound({ error: 'Usuário não encontrado' })
+                return response.notFound({ error: 'Usuário não encontrado' });
             }
 
-            // Deleta o usuário
-            await user.delete()
+            await user.delete();
 
-            // Responde com uma mensagem de sucesso
-            return response.ok({ message: 'Usuário excluído com sucesso' })
+            return response.ok({ message: 'Usuário excluído com sucesso' });
         } catch (error) {
-            // Se ocorrer um erro durante a exclusão, responda com um erro 500
-            console.error(error)
-            return response.internalServerError({ error: 'Ocorreu um erro ao excluir o usuário' })
+            console.error(error);
+            return response.internalServerError({ error: 'Ocorreu um erro ao excluir o usuário' });
         }
     }
 }
