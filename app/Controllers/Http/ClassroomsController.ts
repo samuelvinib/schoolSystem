@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Classroom from 'App/Models/Classroom'
+import User from 'App/Models/User';
 import UserClassroom from 'App/Models/UserClassroom';
 
 export default class ClassroomsController {
@@ -30,22 +31,6 @@ export default class ClassroomsController {
         }
     }
 
-    protected async addStudent({ auth, response }: HttpContextContract) {
-        const userData = auth.user;
-
-        if (!userData) {
-            return response.badRequest("Conta inválida.");
-        }
-
-        const query = UserClassroom.create({
-            user_id: 13,
-            classroom_id: 1
-        })
-
-        return query;
-
-    }
-
     protected async create({ auth, response, request }: HttpContextContract) {
         const bodyRequest = request.all();
         const userData = auth.user;
@@ -66,8 +51,80 @@ export default class ClassroomsController {
         }
     }
 
-    protected async destroy({ params }: HttpContextContract){
+    protected async update({ params, response, request }: HttpContextContract) {
+        const bodyRequest = request.all();
         const { classroomId } = params;
-        return classroomId;
+        try {
+            const query = await Classroom
+                .query()
+                .where('id', classroomId)
+                .update(bodyRequest)
+
+            const data = await Classroom.findBy('id', classroomId)
+            console.log(query[0])
+            if (query[0] == true) {
+                return response.ok({
+                    message: "Dados atualizados com sucesso!",
+                    data
+                });
+            } else {
+                return response.badGateway({ error: "Sala não encontrada." })
+            }
+        } catch (e) {
+            return response.badGateway({ e })
+        }
+    }
+
+
+
+    protected async destroy({ params, response }: HttpContextContract) {
+        const { classroomId } = params;
+
+        try {
+            const data = await Classroom.findBy('id', classroomId)
+            const query: any = await Classroom
+                .query()
+                .where('id', classroomId)
+                .delete()
+
+            if (query[0] == true) {
+                return response.ok({
+                    message: "Sala deletada com sucesso!",
+                    data
+                });
+            } else {
+                return response.badGateway({ error: "Sala não encontrada." })
+            }
+        } catch (e) {
+            return response.badGateway({ e })
+        }
+    }
+
+    protected async addStudent({ auth, response, params, request }: HttpContextContract) {
+        const bodyRequest = request.all();
+        const userData = auth.user;
+        const { classroomId } = params;
+
+        if (!userData) {
+            return response.badRequest("Conta inválida.");
+        }
+
+        // const classroomWithUsers = await Classroom.query()
+        //     .where('classrooms.id', classroomId)
+        //     .preload('userClassrooms', (query) => {
+        //         query.select('user_id').from('user_classrooms');
+        //     })
+        //     .preload('userClassrooms.user')
+        //     .first();
+
+        // return classroomWithUsers?.toJSON();
+
+        const query = UserClassroom.create({
+            user_id: bodyRequest.id,
+            classroom_id: classroomId
+        })
+
+        return query;
+
     }
 }

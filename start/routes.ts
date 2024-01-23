@@ -41,15 +41,15 @@ Route.group(() => {
     }).middleware('auth')
 
     Route.group(()=>{
-        Route.get('/classrooms', 'ClassroomsController.get' );
-        Route.get('/allstudents', 'ClassroomsController.get' );
-        Route.post('/classrooms', 'ClassroomsController.create' );
-        Route.put('/classrooms', 'ClassroomsController.update' );
-        Route.delete('/classrooms', 'ClassroomsController.destroy' );
+        Route.get('/classroom', 'ClassroomsController.get' );
+        Route.post('/classroom', 'ClassroomsController.create' );
+        Route.put('/classroom/:classroomId', 'ClassroomsController.update' );
+        Route.delete('/classroom/:classroomId', 'ClassroomsController.destroy' );
         Route.group(()=>{
-            Route.post('/:classroomId/addstudent', 'ClassroomsController.destroy' );
-            Route.delete('/:classroomsId/addstudent', 'ClassroomsController.destroy' );
-        }).prefix('/classrooms')
+            Route.get('/students', 'UsersController.showAllUsers' );
+            Route.post('/students/:classroomId', 'ClassroomsController.addStudent' );
+            Route.delete('/students/:classroomId', 'ClassroomsController.removeStudent' );
+        }).prefix('/classroom')
     }).prefix('/professor').middleware(['auth', 'isProfessor'])
 
 })

@@ -4,6 +4,17 @@ import User from 'App/Models/User';
 
 export default class UsersController {
 
+    protected async showAllUsers({ response, auth}: HttpContextContract){
+        const userData = auth.user;
+
+        if (!userData) {
+            return response.badRequest("Conta inválida.");
+        }   
+
+        const query = await User.query()
+        .where('role','student')
+        return response.ok(query);
+    }
 
     protected async show({ response, auth}: HttpContextContract){
         const userData = auth.user;
