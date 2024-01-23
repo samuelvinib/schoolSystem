@@ -32,14 +32,25 @@ Route.group(() => {
     })
 
     Route.any('/register', 'AuthController.register');
-
     Route.any('/login', 'AuthController.login');
 
-    Route.get('/user', 'UsersController.show' ).middleware('auth');
-    Route.put('/user', 'UsersController.update' ).middleware('auth');
-    Route.delete('/user', 'UsersController.destroy' ).middleware('auth');
+    Route.group(()=>{
+        Route.get('/user', 'UsersController.show' );
+        Route.put('/user', 'UsersController.update' );
+        Route.delete('/user', 'UsersController.destroy' );
+    }).middleware('auth')
 
-    Route.get('/classroom', 'ClassroomsController.get' ).middleware(['auth', 'isTeacher']);
+    Route.group(()=>{
+        Route.get('/classrooms', 'ClassroomsController.get' );
+        Route.get('/allstudents', 'ClassroomsController.get' );
+        Route.post('/classrooms', 'ClassroomsController.create' );
+        Route.put('/classrooms', 'ClassroomsController.update' );
+        Route.delete('/classrooms', 'ClassroomsController.destroy' );
+        Route.group(()=>{
+            Route.post('/:classroomId/addstudent', 'ClassroomsController.destroy' );
+            Route.delete('/:classroomsId/addstudent', 'ClassroomsController.destroy' );
+        }).prefix('/classrooms')
+    }).prefix('/professors').middleware(['auth', 'isTeacher'])
 
 })
     .prefix('/api')

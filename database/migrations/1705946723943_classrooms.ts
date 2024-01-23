@@ -9,7 +9,7 @@ export default class extends BaseSchema {
       table.integer('teacher_id').unsigned().references('users.id');
       table.integer('class_number').notNullable();
       table.integer('student_capacity').notNullable();
-      table.boolean('avability').defaultTo(true).defaultTo(true);
+      table.boolean('avability').defaultTo(true);
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

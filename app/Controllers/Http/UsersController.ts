@@ -5,9 +5,15 @@ import User from 'App/Models/User';
 export default class UsersController {
 
 
-    protected show({ response, auth}: HttpContextContract){
+    protected async show({ response, auth}: HttpContextContract){
         const userData = auth.user;
-        return response.ok(userData);
+
+        if (!userData) {
+            return response.badRequest("Conta inválida.");
+        }   
+
+        const query = await User.findBy('id',userData.id)
+        return response.ok(query);
     }
 
     protected async update({ request, response, auth}: HttpContextContract){
