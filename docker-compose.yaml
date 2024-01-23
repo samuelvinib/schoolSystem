@@ -26,7 +26,7 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
-    command: sh -c "sleep 10 && node ace serve --watch"
+    command: sh -c "npm install && node ace migration:run && node ace db:seed && node ace serve --watch"
     networks:
       - my-network
 
