@@ -41,7 +41,7 @@ Route.group(() => {
     }).middleware('auth')
 
     Route.group(()=>{
-        Route.get('/classroom', 'ClassroomsController.get' );
+        Route.get('/classroom', 'ClassroomsController.getAllClassrooms' );
         Route.post('/classroom', 'ClassroomsController.create' );
         Route.put('/classroom/:classroomId', 'ClassroomsController.update' );
         Route.delete('/classroom/:classroomId', 'ClassroomsController.destroy' );
