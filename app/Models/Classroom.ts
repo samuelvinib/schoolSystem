@@ -15,7 +15,7 @@ export default class Classroom extends BaseModel {
   public student_capacity: number
 
   @column()
-  public avability: boolean
+  public availability: boolean
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

@@ -1,7 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Classroom from 'App/Models/Classroom'
-import User from 'App/Models/User';
 import UserClassroom from 'App/Models/UserClassroom';
+import Database from '@ioc:Adonis/Lucid/Database';
 
 export default class ClassroomsController {
 
@@ -16,13 +16,22 @@ export default class ClassroomsController {
             const query = await Classroom
                 .query()
                 .where('professor_id', userData.id)
-                .with('user_classrooms', (builder) => {
-                    builder.from('users').select('id', 'email')
-                }, ['id', 'email'])
-                .select('*');
+                .leftJoin('user_classrooms', 'classrooms.id', '=', 'user_classrooms.classroom_id')
+                .leftJoin('users', 'user_classrooms.user_id', '=', 'users.id')
+                .groupBy('classrooms.id') // Agrupa por ID da sala de aula
+                .select(
+                    'classrooms.id',
+                    'classrooms.professor_id',
+                    'classrooms.class_number',
+                    'classrooms.student_capacity',
+                    'classrooms.avability',
+                    'classrooms.created_at',
+                    'classrooms.updated_at',
+                    Database.raw('GROUP_CONCAT(users.name) as user_names'), // Concatena os nomes dos usuários
+                    Database.raw('GROUP_CONCAT(users.email) as user_emails'), // Concatena os emails dos usuários
+                    Database.raw('GROUP_CONCAT(users.registration) as user_registrations') // Concatena as matrículas dos usuários
+                );
 
-
-            // const query = await Classroom.query().where('professor_id', userData.id);
             console.log(query);
             return query;
         } catch (e) {
@@ -120,7 +129,7 @@ export default class ClassroomsController {
         // return classroomWithUsers?.toJSON();
 
         const query = UserClassroom.create({
-            user_id: bodyRequest.id,
+            user_id: bodyRequest.user_id,
             classroom_id: classroomId
         })
 
