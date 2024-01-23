@@ -55,7 +55,8 @@
 >
 > ### Na raiz do projeto, você encontrará um arquivo chamado "Insomnia_routes.json". Para importar as rotas no Insomnia, siga as seguintes etapas:
 > - Abra o Insomnia.
-> - Vá para File -> Import Data -> From File.
+> - No menu suspenso do nome do Documento ou Coleção, selecione Importar/Exportar.
+> - Escolha uma opção no menu suspenso Importar Dados.
 > - Selecione o arquivo "Insomnia_routes.json" e importe.
 > <h3 align="center">Agora você terá todas as rotas disponíveis no Insomnia para facilitar o teste e a interação com a API.</h3>
 >
