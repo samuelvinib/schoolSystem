@@ -2,6 +2,33 @@ import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
 import { column, beforeSave, BaseModel } from '@ioc:Adonis/Lucid/Orm'
 
+/**
+* @swagger
+* components:
+*   schemas:
+*     User:
+*       type: object
+*       properties:
+*         id:
+*           type: integer
+*         name:
+*           type: string
+*         email:
+*           type: string
+*         registration:
+*           type: string
+*         birthdate:
+*           type: string
+*           format: date-time
+*         role:
+*           type: string
+*         createdAt:
+*           type: string
+*           format: date-time
+*         updatedAt:
+*           type: string
+*           format: date-time
+*/
 export default class User extends BaseModel {
   @column({ isPrimary: true })
   public id: number

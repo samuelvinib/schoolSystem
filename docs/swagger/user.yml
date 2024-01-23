@@ -1,0 +1,157 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Users API
+  description: API for managing users and classrooms
+paths:
+  /api/users:
+    get:
+      summary: Obtém todos os estudantes
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Retorna a lista de estudantes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Cria um novo usuário (estudante)
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateRequest'
+      responses:
+        "200":
+          description: Retorna os dados do usuário recém-criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /api/users/classrooms:
+    get:
+      summary: Obtém todas as salas de aula associadas ao usuário
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Retorna a lista de salas de aula associadas ao usuário
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClassroomData'
+  /api/users/profile:
+    get:
+      summary: Obtém o perfil do usuário autenticado
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Retorna os dados do perfil do usuário autenticado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    put:
+      summary: Atualiza o perfil do usuário autenticado
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+      responses:
+        "200":
+          description: Retorna uma mensagem de sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /api/users/delete:
+    delete:
+      summary: Exclui o usuário autenticado
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Retorna uma mensagem de sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+    UserCreateRequest:
+      type: object
+      required:
+        - name
+        - email
+        - password
+        - role
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+    UserUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+    ClassroomData:
+      type: object
+      properties:
+        classroom_id:
+          type: number
+        classroom_number:
+          type: string
+        availability:
+          type: string
+        professor_name:
+          type: string

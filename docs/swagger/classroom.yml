@@ -1,0 +1,172 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Classroom API
+  description: API for managing classrooms and students
+paths:
+  /api/classroom:
+    get:
+      summary: Obtém todas as salas de aula com detalhes dos alunos
+      tags: 
+        - Classroom
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Retorna a lista de salas de aula com detalhes dos alunos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClassroomResponse'
+    post:
+      summary: Cria uma nova sala de aula
+      tags: 
+        - Classroom
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                class_number:
+                  type: number
+                student_capacity:
+                  type: number
+      responses:
+        "200":
+          description: Retorna a sala de aula recém-criada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassroomResponse'
+  /api/classroom/{classroomId}:
+    put:
+      summary: Atualiza uma sala de aula existente
+      tags: 
+        - Classroom
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: classroomId
+          required: true
+          schema:
+            type: number
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                class_number:
+                  type: number
+                student_capacity:
+                  type: number
+      responses:
+        "200":
+          description: Retorna os dados atualizados da sala de aula
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassroomResponse'
+    delete:
+      summary: Deleta uma sala de aula existente
+      tags: 
+        - Classroom
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: classroomId
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Retorna os dados da sala de aula deletada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassroomResponse'
+  /api/classroom/{classroomId}/add-student/{studentsId}:
+    post:
+      summary: Adiciona um estudante a uma sala de aula
+      tags: 
+        - Classroom
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: classroomId
+          required: true
+          schema:
+            type: number
+        - in: path
+          name: studentsId
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Retorna os dados da sala de aula com o estudante adicionado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassroomResponse'
+  /api/classroom/{classroomId}/remove-student/{studentsId}:
+    delete:
+      summary: Remove um estudante de uma sala de aula
+      tags: 
+        - Classroom
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: classroomId
+          required: true
+          schema:
+            type: number
+        - in: path
+          name: studentsId
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Retorna os dados da sala de aula com o estudante removido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassroomResponse'
+components:
+  schemas:
+    ClassroomResponse:
+      type: object
+      properties:
+        classroom_id:
+          type: number
+        classroom_number:
+          type: number
+        student_capacity:
+          type: number
+        availability:
+          type: boolean
+        professor_name:
+          type: string
+        students:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                type: number
+              user_name:
+                type: string
+              user_email:
+                type: string
+              user_registration:
+                type: string
