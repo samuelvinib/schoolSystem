@@ -27,7 +27,7 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
-    command: node ace serve --watch"
+    command: node ace serve --watch
     networks:
       - my-network
 
