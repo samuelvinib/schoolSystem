@@ -1,13 +1,22 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import User from 'App/Models/User';
 
+interface BodyReturn {
+    name:string,
+    email:string,
+    registration:number,
+    birthdate:string,
+    password:string,
+    role:string
+}
+
 export default class AuthController {
 
     protected async register({ request, response }: HttpContextContract) {
         
-        let data: object = request.all();
 
         try {
+            const data: BodyReturn = request.all();
             const user = await User.create(data);
 
             console.log('Usuário criado com sucesso:', user);

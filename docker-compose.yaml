@@ -27,7 +27,7 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
-    command: sh -c "until nc -z -w 5 db 3306; do sleep 1; done && npm install && node ace migration:run && node ace db:seed && node ace serve --watch"
+    command: node ace serve --watch"
     networks:
       - my-network
 

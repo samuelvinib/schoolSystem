@@ -31,8 +31,24 @@
 ```
 
  ## Passo 3
-   Após o build aguarde alguns segundos para que o docker possa fazer as migrations e seeders para popular o banco de dados.
+   Após o build acesse o container da Api:
+   ```bash
+  docker exec -it schoolSystem sh
+  ```
 
+
+ ## Passo 4
+   E agora realize as migrations para a criação de tabelas no banco de dados:
+   ```bash
+  node ace migration:run
+  ```
+
+
+ ## Passo 5
+   E finalmente utilize o comando de seed para popular seu banco de dados:
+   ```bash
+  node ace db:seed
+  ```
 <br>
 
 
